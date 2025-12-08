@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { HeroStats } from "../../components/HeroStats";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,6 +9,7 @@ import { CustomPagination } from "@/components/custom/CustomPagination";
 import { CustomBreadcrumb } from "@/components/custom/CustomBreadcrumb";
 import { useHeroSummary } from "@/heroes/hooks/useHeroSummary";
 import { usePaginateHero } from "@/heroes/hooks/usePaginateHero";
+import { FavoritesHeroesContext } from "@/heroes/context/FavoriteHeroes";
 
 export const HomePage = () => {
   const [search, setSearchParams] = useSearchParams();
@@ -26,6 +27,7 @@ export const HomePage = () => {
   const { data: HeroesResponse } = usePaginateHero(+page, +limit, category);
   const { data: summary } = useHeroSummary();
 
+  const { favoriteCount, favorietes } = useContext(FavoritesHeroesContext);
   return (
     <>
       <>
@@ -44,6 +46,7 @@ export const HomePage = () => {
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger
               value="all"
+              className="cursor-pointer hover:text-red-500"
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "all");
@@ -57,7 +60,7 @@ export const HomePage = () => {
             </TabsTrigger>
             <TabsTrigger
               value="favorites"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 cursor-pointer hover:text-red-500"
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "favorites");
@@ -65,10 +68,11 @@ export const HomePage = () => {
                 })
               }
             >
-              Favorites (-)
+              Favorites ({favoriteCount})
             </TabsTrigger>
             <TabsTrigger
               value="heroes"
+              className="cursor-pointer hover:text-red-500"
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "heroes");
@@ -82,6 +86,7 @@ export const HomePage = () => {
             </TabsTrigger>
             <TabsTrigger
               value="villains"
+              className="cursor-pointer hover:text-red-500"
               onClick={() =>
                 setSearchParams((prev) => {
                   prev.set("tab", "villains");
@@ -100,7 +105,7 @@ export const HomePage = () => {
           </TabsContent>
           <TabsContent value="favorites">
             {/* Mostrar todos los personajes favoritos*/}
-            <HeroGrid heroes={[]} />
+            <HeroGrid heroes={favorietes} />
           </TabsContent>
           <TabsContent value="heroes">
             {/* Mostrar todos los héroes */}
@@ -113,7 +118,9 @@ export const HomePage = () => {
         </Tabs>
 
         {/* Pagination */}
-        <CustomPagination totalPages={HeroesResponse?.pages ?? 1} />
+        {selectedTab !== "favorites" && (
+          <CustomPagination totalPages={HeroesResponse?.pages ?? 1} />
+        )}
       </>
     </>
   );
