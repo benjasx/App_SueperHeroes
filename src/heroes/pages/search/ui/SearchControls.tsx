@@ -16,6 +16,10 @@ export const SearchControls = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const activeAccordion = searchParams.get("active-accordion") ?? "";
   const strength = Number(searchParams.get("strength") ?? "1");
+  const team = searchParams.get("team") ?? "";
+  const category = searchParams.get("category") ?? "";
+  const universe = searchParams.get("universe") ?? "";
+  const status = searchParams.get("status") ?? "";
 
   const setQueryParams = (name: string, value: string) => {
     setSearchParams((prev) => {
@@ -29,6 +33,20 @@ export const SearchControls = () => {
       const value = inputRef.current?.value ?? "";
       setQueryParams("name", value);
     }
+  };
+
+  const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = event.target.value;
+    const inputName = event.target.id;
+    console.log(value);
+    setSearchParams((prev) => {
+      if (value === "") {
+        prev.delete(inputName);
+      } else {
+        prev.set(inputName, value);
+      }
+      return prev;
+    });
   };
 
   return (
@@ -94,27 +112,64 @@ export const SearchControls = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Team</label>
-                  <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                    All teams
-                  </div>
+                  <select
+                    name="team"
+                    id="team"
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    onChange={handleTeamChange}
+                    defaultValue={team}
+                  >
+                    <option value="">ALL TEAM</option>
+                    <option value="Suicide Squad">Suicide Squad</option>
+                    <option value="X-Men">X-Men</option>
+                    <option value="Liga de la Justicia">
+                      Liga de la Justicia
+                    </option>
+                    <option value="Batfamilia">Batfamilia</option>
+                    <option value="solo">solo</option>
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Category</label>
-                  <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                    All categories
-                  </div>
+                  <select
+                    name="category"
+                    id="category"
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    defaultValue={category}
+                    onChange={handleTeamChange}
+                  >
+                    <option value="">ALL CATEGORY</option>
+                    <option value="Hero">Heroes</option>
+                    <option value="Villain">Villanos</option>
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Universe</label>
-                  <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                    All universes
-                  </div>
+                  <select
+                    name="universe"
+                    id="universe"
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    defaultValue={universe}
+                    onChange={handleTeamChange}
+                  >
+                    <option value="">ALL CATEGORY</option>
+                    <option value="DC">DC</option>
+                    <option value="Marvel">Marvel</option>
+                  </select>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Status</label>
-                  <div className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                    All statuses
-                  </div>
+                  <select
+                    name="status"
+                    id="status"
+                    className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                    defaultValue={status}
+                    onChange={handleTeamChange}
+                  >
+                    <option value="">ALL STATUS</option>
+                    <option value="active">ACTIVE</option>
+                    <option value="deceased">DECEASED</option>
+                  </select>
                 </div>
               </div>
               <div className="mt-4">
