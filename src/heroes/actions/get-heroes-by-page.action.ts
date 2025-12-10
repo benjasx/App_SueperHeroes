@@ -15,6 +15,7 @@ export const getHeroesByPage = async (
   if (isNaN(limit)) {
     limit = 6;
   }
+
   const { data } = await heroApi.get<HeroesResponse>(`/`, {
     params: {
       limit: limit,
